@@ -25,9 +25,13 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var blueValueSlider: UISlider!
     
     var delegate: SettingsViewControllerDelegate!
+    var viewColor: UIColor!
+    let sliderTag = UISlider()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        previewColorView.backgroundColor = viewColor
         
         previewColorView.layer.cornerRadius = 15
         
@@ -38,6 +42,9 @@ class SettingsViewController: UIViewController {
         redColorValueTF.text = String(redValueSlider.value)
         greenColorValueTF.text = String(greenValueSlider.value)
         blueColorValueTF.text = String(blueValueSlider.value)
+        
+        getSliderValue()
+        updateValues(sender: UISlider())
     }
     
     @IBAction func rgbSetSliders(_ sender: UISlider) {
@@ -48,7 +55,7 @@ class SettingsViewController: UIViewController {
             blue: CGFloat(blueValueSlider.value),
             alpha:1.0
         )
-        
+    
         redColorValueLabel.text = String(format: "%.2f", redValueSlider.value)
         greenColorValueLabel.text = String(format: "%.2f", greenValueSlider.value)
         blueColorValueLabel.text = String(format: "%.2f", blueValueSlider.value)
@@ -60,10 +67,28 @@ class SettingsViewController: UIViewController {
     
     @IBAction func saveColorButton() {
         
-       // delegate.setRgbValue(for: ??)
-        
+        delegate.passColor(to: previewColorView.backgroundColor ?? .white)
         dismiss(animated: true)
-        
     }
     
+    private func getSliderValue() {
+        
+        let receivedColor = CIColor(color: viewColor)
+        
+        redValueSlider.value = Float(receivedColor.red)
+        greenValueSlider.value = Float(receivedColor.green)
+        blueValueSlider.value = Float(receivedColor.blue)
+    }
+    
+    private func updateValues(sender: UISlider) {
+        
+        if sliderTag.tag == 0 {
+            redColorValueTF.text = String(format: "%.2f",redValueSlider.value)
+            redColorValueLabel.text = String(format: "%.2f",redValueSlider.value)
+            greenColorValueTF.text = String(format: "%.2f",greenValueSlider.value)
+            greenColorValueLabel.text = String(format: "%.2f",greenValueSlider.value)
+            blueColorValueTF.text = String(format: "%.2f",blueValueSlider.value)
+            blueColorValueLabel.text = String(format: "%.2f",blueValueSlider.value)
+        }
+    }
 }

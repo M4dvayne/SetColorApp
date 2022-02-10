@@ -9,39 +9,35 @@ import UIKit
 
 protocol SettingsViewControllerDelegate {
     
-    func setRgbValue(for mainColorizedView: UIView) // Корректен ли тип параметра?
+    func passColor(to colorViewController: UIColor)
 }
 
 class ColorViewController: UIViewController {
 
-    
-    @IBOutlet weak var mainColorizedView: UIView!
-    
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
-        guard let navigationVC = segue.destination as? UINavigationController else {return}
-        guard let settingVC = navigationVC.topViewController as? SettingsViewController else {return}
-        settingVC.previewColorView.backgroundColor = mainColorizedView.backgroundColor
-        //Передать значения rgb в слайдеры, лейблы и текстовые поля.
+        guard let settingVC = segue.destination as? SettingsViewController else {return}
+        settingVC.delegate = self
+        settingVC.viewColor = view.backgroundColor
+        }
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
-
-}
 
 extension ColorViewController: SettingsViewControllerDelegate {
-    
-    func setRgbValue(for mainColorizedView: UIView) {
-        
-        //mainColorizedView.backgroundColor = ?? Как обратиться к previewColorView?
-        
+
+    func passColor(to colorViewController: UIColor) {
+
+        view.backgroundColor = colorViewController
     }
+    
+    
+    
+    
+    
+   
+    
+    
 
-}
+
 
 
 
@@ -49,3 +45,4 @@ extension ColorViewController: SettingsViewControllerDelegate {
 
 
         
+}
